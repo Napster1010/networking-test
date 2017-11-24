@@ -5,8 +5,9 @@
  */
 package networking;
 
+import java.awt.event.KeyEvent;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import javax.swing.JOptionPane;
 
@@ -14,19 +15,15 @@ import javax.swing.JOptionPane;
  *
  * @author Napster
  */
-public class editor extends javax.swing.JFrame {
-
-    ServerSocket server;
-    Socket socket;    
+public class Client1 extends javax.swing.JFrame {
+    Socket socket;
     DataOutputStream dos;
+    char inputChar;
     /**
-     * Creates new form test
+     * Creates new form Client1
      */
-    public editor(ServerSocket server,Socket socket) throws Exception {
+    public Client1() {
         initComponents();
-        this.server = server;
-        this.socket = socket;
-        dos = new DataOutputStream(socket.getOutputStream());            
     }
 
     /**
@@ -48,12 +45,12 @@ public class editor extends javax.swing.JFrame {
             }
         });
 
+        jTextArea1.setBackground(new java.awt.Color(255, 255, 204));
         jTextArea1.setColumns(20);
+        jTextArea1.setFont(new java.awt.Font("Monospaced", 0, 16)); // NOI18N
         jTextArea1.setRows(5);
+        jTextArea1.setCaretColor(new java.awt.Color(255, 153, 51));
         jTextArea1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextArea1KeyPressed(evt);
-            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextArea1KeyReleased(evt);
             }
@@ -68,47 +65,69 @@ public class editor extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(91, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextArea1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyTyped
-       
-        
-    }//GEN-LAST:event_jTextArea1KeyTyped
-
-    private void jTextArea1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyPressed
-
-    
-    }//GEN-LAST:event_jTextArea1KeyPressed
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        try
+        {
+            Socket socket = new Socket("localhost", 23);            
+            DataInputStream dis = new DataInputStream(socket.getInputStream());
+            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());            
+            this.socket = socket;
+            this.dos = dos;
+            
+            //Start a new Thread which will retrieve data from the server
+            ClientListener1 cl1 = new ClientListener1(dis,jTextArea1);
+            Thread thread = new Thread(cl1);
+            thread.start();
+                        
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();            
+        }
+    }//GEN-LAST:event_formWindowOpened
 
     private void jTextArea1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyReleased
 
-        try
-        {
-                dos.writeUTF(jTextArea1.getText(jTextArea1.getText().length()-1, 1));                                
-        }
-        catch(Exception e){e.printStackTrace();}
-
         
-        // TODO add your handling code here:
+        
+
     }//GEN-LAST:event_jTextArea1KeyReleased
 
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+    private void jTextArea1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyTyped
+        inputChar = evt.getKeyChar();
+        switch(inputChar)
+        {
+            
+            case KeyEvent.VK_BACK_SPACE:
+                
+                break;
+            case KeyEvent.VK_DELETE:
+                break;
+            case KeyEvent.VK_COPY:
+                break;
+            case KeyEvent.VK_PASTE:
+                break;
+            default:
+                
+        }
         
-        // TODO add your handling code here:
-    }//GEN-LAST:event_formWindowOpened
+
+    }//GEN-LAST:event_jTextArea1KeyTyped
 
     /**
      * @param args the command line arguments
@@ -127,23 +146,22 @@ public class editor extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(editor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Client1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(editor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Client1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(editor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Client1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(editor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Client1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
 
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new editor(ServerSocket server,Socket socket).setVisible(true);
-//            }
-//        });
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Client1().setVisible(true);
+            }
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

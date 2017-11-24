@@ -17,14 +17,14 @@ import javax.swing.JOptionPane;
  *
  * @author Napster
  */
-public class connection extends javax.swing.JFrame {
+public class ServerEngine extends javax.swing.JFrame {
     
     ServerSocket server;            
         
     /**
      * Creates new form connection
      */
-    public connection() {
+    public ServerEngine() {
         initComponents();
     }
 
@@ -77,26 +77,17 @@ public class connection extends javax.swing.JFrame {
         try
         {
             server = new ServerSocket(23);            
+            System.out.println("******************************");
             System.out.println("SERVER STARTED !!");            
+            System.out.println("******************************");
             System.out.println();
-            System.out.println("******************************");
-            System.out.println("CURRENT THREAD: " + Thread.currentThread().getName());
-            System.out.println("******************************");
+            System.out.println();
             
-            System.out.println("Waiting for a client ....");
-            
-            
-            Socket socket = server.accept();
-                       
-            System.out.println("Client request accepted ! Connected to " + socket.getLocalAddress());
-            
-            Listener con = new Listener(server);
+            ConnectionListener con = new ConnectionListener(server);
             Thread thread = new Thread(con);    
             thread.start();
-
-            this.dispose();
-            new editor(server,socket).setVisible(true);
             
+            this.dispose();
         }
         catch(Exception e)
         {
@@ -125,20 +116,21 @@ public class connection extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(connection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ServerEngine.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(connection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ServerEngine.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(connection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ServerEngine.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(connection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ServerEngine.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new connection().setVisible(true);
+                new ServerEngine().setVisible(true);
             }
         });
     }
