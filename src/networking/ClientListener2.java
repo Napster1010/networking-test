@@ -6,17 +6,19 @@
 package networking;
 
 import java.io.DataInputStream;
+import java.util.StringTokenizer;
 import javax.swing.JTextArea;
 
 /**
- *
+ * This class is used to retrieve data from server and reflect the change on the editor (Client side)
  * @author Napster
  */
 public class ClientListener2 implements Runnable{
     DataInputStream dis;
     JTextArea jtextArea1;
-    String read;
-    
+    String read,deleteString;
+    int start,end;
+    int pos;
     
     public ClientListener2(DataInputStream dis,JTextArea jTextArea1)
     {
@@ -31,10 +33,26 @@ public class ClientListener2 implements Runnable{
             try
             {
                 read = dis.readUTF();
+                
+                if(!(read.startsWith("!DELETE!")))
+                    pos = dis.readInt();
+                
                 if(read.equals("~"))
                     break;
                 else
-                    jtextArea1.setText(jtextArea1.getText() + read);
+                {
+                    if(read.startsWith("!DELETE!"))
+                    {
+                        deleteString = read.substring(8);
+                        StringTokenizer split = new StringTokenizer(deleteString, "!");
+                        start = Integer.parseInt(split.nextToken());
+                        end = Integer.parseInt(split.nextToken());
+                        
+                        jtextArea1.replaceRange("", start, end);
+                    }
+                    else
+                        jtextArea1.insert(read, pos);
+                }
             }
             catch(Exception e)
             {

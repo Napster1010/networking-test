@@ -12,7 +12,7 @@ import java.net.Socket;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * This class is used to establish connection with a client. Multiple threads of this class can run together (Server side)
  * @author Napster
  */
 public class ConnectionListener implements Runnable{
@@ -58,9 +58,14 @@ public class ConnectionListener implements Runnable{
 
             //Server side logic
             String read;
+            int pos=0;
             while(true)
             {
                 read = dis.readUTF();
+
+                if(!(read.startsWith("!DELETE!")))
+                    pos = dis.readInt();
+
                 if(read.equals("~"))
                     break;
                 else
@@ -69,7 +74,9 @@ public class ConnectionListener implements Runnable{
                     {
                         if(d!=dos)
                         {
-                            d.writeUTF(read);                            
+                            d.writeUTF(read);       
+                            if(!(read.startsWith("!DELETE!")))
+                                d.writeInt(pos);
                         }
                     }
                 }

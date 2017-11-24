@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * This class is used in starting the main server engine at port number 23 (Server side)
  * @author Napster
  */
 public class ServerEngine extends javax.swing.JFrame {

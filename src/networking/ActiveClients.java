@@ -10,7 +10,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 /**
- *
+ * This class is used to maintain a log of all the clients actively connected to the Server. This class has a list of socket connection and DataOutputStream of all clients connected. (Server side)
  * @author Napster
  */
 public class ActiveClients {

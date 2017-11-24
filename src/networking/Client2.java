@@ -5,17 +5,21 @@
  */
 package networking;
 
+import java.awt.event.KeyEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
 /**
- *
+ * This class is the main editor (Client side)
  * @author Napster
  */
 public class Client2 extends javax.swing.JFrame {
-Socket socket;
-DataOutputStream dos;
+    Socket socket;
+    DataOutputStream dos;
+    char inputChar;
+    String previous,deletedText;
+    int diff,start,end;
     /**
      * Creates new form Client2
      */
@@ -99,13 +103,40 @@ DataOutputStream dos;
     }//GEN-LAST:event_formWindowOpened
 
     private void jTextArea1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyReleased
+
+        inputChar = evt.getKeyChar();
+        try
+        {
+            if(inputChar==KeyEvent.VK_BACK_SPACE||inputChar==KeyEvent.VK_DELETE)
+            {
+                if(jTextArea1.getText().length()<previous.length())
+                {
+                    diff = previous.length() - jTextArea1.getText().length();        
+                    start = jTextArea1.getCaretPosition();
+                    end = start + diff;
+                    dos.writeUTF("!DELETE!" + jTextArea1.getCaretPosition() + "!" + end);                    
+                }           
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        previous = jTextArea1.getText();     
+        
     }//GEN-LAST:event_jTextArea1KeyReleased
 
     private void jTextArea1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyTyped
 
+        inputChar = evt.getKeyChar();
         try
         {
-            dos.writeUTF(String.valueOf(evt.getKeyChar()));
+            if(!(inputChar==KeyEvent.VK_BACK_SPACE||inputChar==KeyEvent.VK_DELETE))
+            {            
+                dos.writeUTF(String.valueOf(inputChar));
+                dos.writeInt(jTextArea1.getCaretPosition());
+            }    
         }
         catch(Exception e)
         {

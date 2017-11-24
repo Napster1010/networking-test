@@ -12,13 +12,15 @@ import java.net.Socket;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * This class is the main editor (Client side)
  * @author Napster
  */
 public class Client1 extends javax.swing.JFrame {
     Socket socket;
     DataOutputStream dos;
     char inputChar;
+    String previous,deletedText;
+    int diff,start,end;
     /**
      * Creates new form Client1
      */
@@ -103,27 +105,43 @@ public class Client1 extends javax.swing.JFrame {
 
     private void jTextArea1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyReleased
 
-        
-        
+        inputChar = evt.getKeyChar();
+        try
+        {
+            if(inputChar==KeyEvent.VK_BACK_SPACE||inputChar==KeyEvent.VK_DELETE)
+            {
+                if(jTextArea1.getText().length()<previous.length())
+                {
+                    diff = previous.length() - jTextArea1.getText().length();        
+                    start = jTextArea1.getCaretPosition();
+                    end = start + diff;
+                    dos.writeUTF("!DELETE!" + jTextArea1.getCaretPosition() + "!" + end);                    
+                }           
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        previous = jTextArea1.getText();                        
 
     }//GEN-LAST:event_jTextArea1KeyReleased
 
     private void jTextArea1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyTyped
+
         inputChar = evt.getKeyChar();
-        switch(inputChar)
+        try
         {
-            
-            case KeyEvent.VK_BACK_SPACE:
-                
-                break;
-            case KeyEvent.VK_DELETE:
-                break;
-            case KeyEvent.VK_COPY:
-                break;
-            case KeyEvent.VK_PASTE:
-                break;
-            default:
-                
+            if(!(inputChar==KeyEvent.VK_BACK_SPACE||inputChar==KeyEvent.VK_DELETE))
+            {            
+                dos.writeUTF(String.valueOf(inputChar));
+                dos.writeInt(jTextArea1.getCaretPosition());
+            }    
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
         }
         
 
